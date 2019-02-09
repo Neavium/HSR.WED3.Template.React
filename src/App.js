@@ -22,13 +22,15 @@ import type { User } from "./api";
 const AllTransactions = () => <div />;
 const Dashboard = () => <div />;
 
+type Props = {};
+
 type State = {
   isAuthenticated: boolean,
   token: ?string,
   user: ?User
 };
 
-class App extends React.Component<{}, State> {
+class App extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     const token = sessionStorage.getItem("token");
