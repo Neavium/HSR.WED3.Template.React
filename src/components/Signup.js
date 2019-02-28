@@ -5,7 +5,18 @@ import { Redirect } from "react-router-dom";
 
 import { signup } from "../api";
 
-class Signup extends React.Component<{}, *> {
+type Props = {};
+
+type State = {
+  login: string,
+  firstname: string,
+  lastname: string,
+  password: string,
+  error: ?Error,
+  redirectToReferrer: boolean
+};
+
+class Signup extends React.Component<Props, State> {
   state = {
     login: "",
     firstname: "",

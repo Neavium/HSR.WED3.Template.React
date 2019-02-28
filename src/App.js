@@ -22,6 +22,9 @@ import type { User } from "./api";
 const AllTransactions = () => <div />;
 const Dashboard = () => <div />;
 
+// The following are type definitions for Flow,
+// an optional type checker for JavaScript. You
+// can safely ignore them for now.
 type Props = {};
 
 type State = {
@@ -35,6 +38,10 @@ class App extends React.Component<Props, State> {
     super(props);
     const token = sessionStorage.getItem("token");
     const user = sessionStorage.getItem("user");
+    // Initialize the state, the constructor is the
+    // only place where it's ok to directlly assign
+    // a value to this.state. For all other state
+    // changes, use this.setState.
     if (token && user) {
       this.state = {
         isAuthenticated: true,
@@ -53,7 +60,7 @@ class App extends React.Component<Props, State> {
   authenticate = (
     login: string,
     password: string,
-    cb: (error: ?Error) => void
+    callback: (error: ?Error) => void
   ) => {
     api
       .login(login, password)
@@ -61,9 +68,9 @@ class App extends React.Component<Props, State> {
         this.setState({ isAuthenticated: true, token, user: owner });
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("user", JSON.stringify(owner));
-        cb(null);
+        callback(null);
       })
-      .catch(error => cb(error));
+      .catch(error => callback(error));
   };
 
   signout = (callback: () => void) => {
@@ -126,6 +133,8 @@ class App extends React.Component<Props, State> {
           />
           <Route path="/signup" component={Signup} />
           {/* 
+            This is a comment inside JSX! It's a bit ugly, but works fine.
+
             The following are protected routes that are only available for logged-in users. We also pass the user and token so 
             these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
           */}
