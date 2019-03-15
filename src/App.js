@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Link, Route, withRouter} from "react-router-dom
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import Button from "./components/Button";
 
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -13,8 +14,8 @@ import type {User} from "./api";
 import * as api from "./api";
 
 // TODO: Move to own files
-const AllTransactions = () => <div />;
-const Dashboard = () => <div />;
+const AllTransactions = () => <div/>;
+const Dashboard = () => <div/>;
 
 // The following are type definitions for Flow,
 // an optional type checker for JavaScript. You
@@ -85,22 +86,20 @@ class App extends React.Component<Props, State> {
             if (isAuthenticated && user) {
                 return (
                     <nav>
-            <span>
-              {user.firstname} {user.lastname} &ndash; {user.accountNr}
-            </span>
+                        <span>
+                            {user.firstname} {user.lastname} &ndash; {user.accountNr}
+                        </span>
                         {/* Links inside the App are created using the react-router's Link component */}
                         <Link to="/">Home</Link>
                         <Link to="/dashboard">Kontoübersicht</Link>
                         <Link to="/transactions">Zahlungen</Link>
-                        <a
-                            href="/"
+                        <button
                             onClick={event => {
                                 event.preventDefault();
                                 this.signout(() => history.push("/"));
                             }}
-                        >
-                            Logout {user.firstname} {user.lastname}
-                        </a>
+                        >Logout {user.firstname} {user.lastname}
+                        </button>
                     </nav>
                 );
             } else {
@@ -129,7 +128,7 @@ class App extends React.Component<Props, State> {
                     {/*
             This is a comment inside JSX! It's a bit ugly, but works fine.
 
-            The following are protected routes that are only available for logged-in users. We also pass the user and token so 
+            The following are protected routes that are only available for logged-in users. We also pass the user and token so
             these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
           */}
                     <PrivateRoute
