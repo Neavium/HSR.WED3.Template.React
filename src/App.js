@@ -3,10 +3,12 @@
 import React from "react";
 import {BrowserRouter as Router, Link, Route, withRouter} from "react-router-dom";
 
+import 'semantic-ui-css/semantic.min.css';
+
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import Button from "./components/Button";
+import {Button} from "semantic-ui-react";
 
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -93,13 +95,10 @@ class App extends React.Component<Props, State> {
                         <Link to="/">Home</Link>
                         <Link to="/dashboard">Kontoübersicht</Link>
                         <Link to="/transactions">Zahlungen</Link>
-                        <button
-                            onClick={event => {
-                                event.preventDefault();
-                                this.signout(() => history.push("/"));
-                            }}
-                        >Logout {user.firstname} {user.lastname}
-                        </button>
+                        <Button  onClick={event => {
+                            event.preventDefault();
+                            this.signout(() => history.push("/"));
+                        }}>Logout {user.firstname} {user.lastname}</Button>
                     </nav>
                 );
             } else {
