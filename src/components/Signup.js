@@ -1,9 +1,9 @@
 // @flow
 
 import React from "react";
-import { Redirect } from "react-router-dom";
+import {Redirect} from "react-router-dom";
 
-import { signup } from "../api";
+import {signup} from "../api";
 
 type Props = {};
 

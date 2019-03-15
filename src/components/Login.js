@@ -1,7 +1,7 @@
 // @flow
 
 import React from "react";
-import { Redirect, Link } from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 
 export type Props = {
   /* Callback to submit an authentication request to the server */
