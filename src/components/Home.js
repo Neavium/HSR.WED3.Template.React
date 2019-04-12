@@ -20,6 +20,7 @@ const Home = ({isAuthenticated}: Props) => (
                 <p>Falls Sie noch keinen Account besitzen können Sie sich hier registrieren:</p>
                 <Link to={'/signup'}>Registrieren</Link>
             </div>
+
         }
     </div>
 )
