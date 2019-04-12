@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {Link} from 'react-router-dom'
+import { Button } from 'semantic-ui-react'
 
 export type Props = {
     isAuthenticated: boolean,
@@ -12,7 +13,7 @@ const Home = ({isAuthenticated}: Props) => (
         {isAuthenticated
             ? <div>
                 <p>Willkommen zurück!</p>
-                <Link to={'/dashboard'}>Zum Dashboard</Link>
+                <Button as={Link} content="Zum Dashboard" to={ "/dashboard"}/>
             </div>
             : <div>
                 <Link to={'/login'}>Einloggen</Link>
