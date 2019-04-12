@@ -2,6 +2,11 @@
 
 import React from "react";
 import {Redirect, Link} from "react-router-dom";
+import {Grid} from "semantic-ui-react";
+import {Form} from "semantic-ui-react";
+import {Button, Divider, Segment} from "semantic-ui-react";
+import {Header} from "semantic-ui-react";
+import {Message} from "semantic-ui-react";
 
 export type Props = {
     /* Callback to submit an authentication request to the server */
@@ -64,23 +69,36 @@ class Login extends React.Component<Props, *> {
         return (
             <div>
                 <h1>Bank of Rapperswil</h1>
-                <form>
-                    <h2>Login</h2>
-                    <input
-                        onChange={this.handleLoginChanged}
-                        placeholder="Login"
-                        value={this.state.login}
-                    />
-                    <input
-                        onChange={this.handlePasswordChanged}
-                        placeholder="Password"
-                        type="password"
-                        value={this.state.password}
-                    />
-                    <button onClick={this.handleSubmit}>Log-in</button>
-                </form>
-                {error && <p>Es ist ein Fehler aufgetreten!</p>}
-                <Link to="/signup">Noch keinen Account?</Link>
+                <Segment placeholder style={{maxWidth:'50%'}}>
+                    <Grid columns={2} relaxed='very' stackable>
+                        <Grid.Column>
+                            <Form error={error}>
+                                <Header as='h2'>Login</Header>
+                                <Form.Input icon='user' iconPosition='left'
+                                            label='Username' placeholder='User'
+                                            value={this.state.login}
+                                            onChange={this.handleLoginChanged}/>
+                                <Form.Input icon='lock' iconPosition='left'
+                                            label='Password' type='Password'
+                                            placeholder='Password'
+                                            value={this.state.password}
+                                            onChange={this.handlePasswordChanged}/>
+                                <Message
+                                    error
+                                    header='Action Forbidden'
+                                    content='You can only sign up for an account once with a given e-mail address.'
+                                />
+                                <Button onClick={this.handleSubmit} content='Einloggen' primary />
+                            </Form>
+                        </Grid.Column>
+
+                        <Grid.Column verticalAlign='middle'>
+                            <Button as={Link} to='/signup' content='Registrieren' icon='signup' size='big' />
+                        </Grid.Column>
+                    </Grid>
+
+                    <Divider vertical>Oder</Divider>
+                </Segment>
             </div>
         );
     }

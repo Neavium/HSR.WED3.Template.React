@@ -92,13 +92,14 @@ class App extends React.Component<Props, State> {
                             {user.firstname} {user.lastname} &ndash; {user.accountNr}
                         </span>
                         {/* Links inside the App are created using the react-router's Link component */}
-                        <Link to="/">Home</Link>
-                        <Link to="/dashboard">Kontoübersicht</Link>
-                        <Link to="/transactions">Zahlungen</Link>
-                        <Button  onClick={event => {
-                            event.preventDefault();
-                            this.signout(() => history.push("/"));
-                        }}>Logout {user.firstname} {user.lastname}</Button>
+                        <Button content={"Home"} as={Link} to={"/"} />
+                        <Button content={"Kontoübersicht"} as={Link} to={"/dashboard"}/>
+                        <Button content={"Zahlungen"} as={Link} to={"/transactions"}/>
+                        <Button  content={`Logout ${user.firstname} ${user.lastname}`}
+                            onClick={event => {
+                                event.preventDefault();
+                                this.signout(() => history.push("/"));
+                            }}/>
                     </nav>
                 );
             } else {

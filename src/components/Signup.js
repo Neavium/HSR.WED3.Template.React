@@ -5,6 +5,9 @@ import {Redirect} from "react-router-dom";
 
 import {signup} from "../api";
 
+import {Form, Message} from "semantic-ui-react";
+import {Button} from "semantic-ui-react";
+
 type Props = {};
 
 type State = {
@@ -96,7 +99,20 @@ class Signup extends React.Component<Props, State> {
                     />
                     <button onClick={this.handleSubmit}>Account eröffnen</button>
                 </form>
-                {error && <p>Es ist ein Fehler aufgetreten!</p>}
+                <Form style={{maxWidth: '50%'}} error={error}>
+                    <Form.Input fluid label='Username' placeholder='Username'
+                                required onChange={this.handleLoginChanged}/>
+                    <Form.Input fluid label='Vorname' placeholder='Vorname'
+                                required onChange={this.handleFirstNameChanged}/>
+                    <Form.Input fluid label='Nachname' placeholder='Nachname' />
+                    <Form.Input type='password' fluid label='Password' placeholder='Password' required/>
+                    <Button onClick={this.handleSubmit} content='Account eröffnen'/>
+                    <Message
+                        error
+                        header='Action Forbidden'
+                        content='You can only sign up for an account once with a given e-mail address.'
+                    />
+                </Form>
             </div>
         );
     }
