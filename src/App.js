@@ -89,7 +89,8 @@ class App extends React.Component<Props, State> {
         const MenuBar = withRouter(({history, location: {pathname}}) => {
             if (isAuthenticated && user) {
                 return (
-                    <Menu inverted style={{borderRadius:0}}>
+                    <Menu inverted stackable size={'massive'} style={{borderRadius:0}}>
+                        <Menu.Item header> WED3 Finances Incorporated</Menu.Item>
                         <Menu.Item
                             as={Link} to={"/"}
                             name='home'
