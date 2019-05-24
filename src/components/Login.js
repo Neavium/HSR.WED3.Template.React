@@ -58,7 +58,7 @@ class Login extends React.Component<Props, *> {
 
     render() {
         const {from} = this.props.location.state || {
-            from: {pathname: "/dashboard"}
+            from: {pathname: "/"}
         };
         const {redirectToReferrer, error} = this.state;
 

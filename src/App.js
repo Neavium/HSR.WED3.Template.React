@@ -1,24 +1,23 @@
 // @flow
 
 import React from "react";
-import {BrowserRouter as Router, Link, Route, withRouter} from "react-router-dom";
+import {BrowserRouter as Router, Link, Redirect, Route, withRouter} from "react-router-dom";
 
 import 'semantic-ui-css/semantic.min.css';
 
 import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import {Button} from "semantic-ui-react";
-import { Menu } from 'semantic-ui-react';
+import {Button, Menu} from "semantic-ui-react";
 
 import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./components/Dashboard";
 
 import type {User} from "./api";
 import * as api from "./api";
 
 // TODO: Move to own files
 const AllTransactions = () => <div/>;
-const Dashboard = () => <div/>;
 
 // The following are type definitions for Flow,
 // an optional type checker for JavaScript. You
@@ -96,14 +95,6 @@ class App extends React.Component<Props, State> {
                             name='home'
                             active={pathname === '/'}
                         >
-                            Home
-                        </Menu.Item>
-
-                        <Menu.Item
-                            as={Link} to={"/dashboard"}
-                            name='reviews'
-                            active={pathname === '/dashboard'}
-                        >
                             Kontoübersicht
                         </Menu.Item>
 
@@ -125,26 +116,10 @@ class App extends React.Component<Props, State> {
                         </Menu.Menu>
                     </Menu>
                 );
-
-                    {/*<nav>*/}
-                        {/*<span>*/}
-                            {/*{user.firstname} {user.lastname} &ndash; {user.accountNr}*/}
-                        {/*</span>*/}
-                        {/*/!* Links inside the App are created using the react-router's Link component *!/*/}
-                        {/*<Link to="/">Home</Link>*/}
-                        {/*<Link to="/dashboard">Kontoübersicht</Link>*/}
-                        {/*<Link to="/transactions">Zahlungen</Link>*/}
-                        {/*<Button  onClick={event => {*/}
-                            {/*event.preventDefault();*/}
-                            {/*this.signout(() => history.push("/"));*/}
-                        {/*}}>Logout {user.firstname} {user.lastname}</Button>*/}
-                    {/*</nav>*/}
-                // );
             } else {
                 return null;
             }
         });
-
         return (
             <Router>
                 <div>
@@ -152,9 +127,17 @@ class App extends React.Component<Props, State> {
                     <Route
                         exact
                         path="/"
-                        render={props => (
-                            <Home {...props} isAuthenticated={isAuthenticated}/>
-                        )}
+                        render={() => {
+                            if (!isAuthenticated){
+                                return (<Redirect
+                                    to={{pathname: "/login"}}
+                                />);
+                            }else{
+                                return (
+                                    React.createElement(Dashboard, {user, token})
+                                );
+                            }
+                        }}
                     />
                     <Route
                         path="/login"
@@ -169,12 +152,7 @@ class App extends React.Component<Props, State> {
             The following are protected routes that are only available for logged-in users. We also pass the user and token so
             these components can do API calls. PrivateRoute is not part of react-router but our own implementation.
           */}
-                    <PrivateRoute
-                        path="/dashboard"
-                        isAuthenticated={isAuthenticated}
-                        token={token}
-                        component={Dashboard}
-                    />
+
                     <PrivateRoute
                         path="/transactions"
                         isAuthenticated={isAuthenticated}
