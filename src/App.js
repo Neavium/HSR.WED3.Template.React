@@ -11,12 +11,10 @@ import {Button, Menu} from "semantic-ui-react";
 
 import PrivateRoute from "./components/PrivateRoute";
 import Dashboard from "./components/Dashboard";
+import AllTransactions from "./components/AllTransactions";
 
 import type {User} from "./api";
 import * as api from "./api";
-
-// TODO: Move to own files
-const AllTransactions = () => <div/>;
 
 // The following are type definitions for Flow,
 // an optional type checker for JavaScript. You

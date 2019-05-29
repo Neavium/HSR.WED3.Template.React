@@ -2,6 +2,7 @@
 import React, {Component} from "react";
 import {Button, Dimmer, Divider, Form, Grid, Header, Loader, Segment, Table} from 'semantic-ui-react';
 import {getTransactions} from "../api";
+import {TransactionList} from "./TransactionList";
 
 
 class Dashboard extends Component {
@@ -44,9 +45,9 @@ class Dashboard extends Component {
                                 Latest Transactions
                             </Header>
                         </Segment>
-
                         <Segment>
-                            <LatestTransactions token={this.props.token}/>
+                            <Divider/>
+                            <TransactionList token={this.props.token} fromDate={''} toDate={''} count={3} skip={0}/>
                             <Button primary content={'All Transactions'}/>
                         </Segment>
                     </Segment.Group>
@@ -54,31 +55,6 @@ class Dashboard extends Component {
             </Grid>
         )
     }
-}
-
-class LatestTransactions extends Component {
-
-    state = {
-        transactions: []
-    };
-
-    componentDidMount() {
-        getTransactions(this.props.token)
-            .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
-    }
-
-    render = () => <TransactionList transactions={this.state.transactions}/>
-}
-
-function TransactionList({transactions}) {
-    const renderTransaction = ({from, target, amount, total, date}) =>
-        <Table.Row>
-            <Table.Cell>{from}</Table.Cell>
-            <Table.Cell>{target}</Table.Cell>
-            <Table.Cell>{amount}</Table.Cell>
-            <Table.Cell>{total}</Table.Cell>
-        </Table.Row>;
-    return <Table singleLine basic={'very'}>{transactions.map(renderTransaction)} </Table>
 }
 
 
