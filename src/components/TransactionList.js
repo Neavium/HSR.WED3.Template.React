@@ -1,6 +1,6 @@
 //@flow
 import React, {Component} from "react";
-import {Button, Dimmer, Divider, Form, Grid, Header, Loader, Segment, Table} from 'semantic-ui-react';
+import {Table} from 'semantic-ui-react';
 import {getTransactions} from "../api";
 
 export class TransactionList extends Component {
@@ -20,7 +20,7 @@ export class TransactionList extends Component {
 function TransactionsToList({transactions, showDate}) {
     const renderTransaction = ({from, target, amount, total, date}) =>
         <Table.Row>
-            {showDate && <Table.Cell>{date}</Table.Cell>}
+            {showDate && <Table.Cell>{convertJSONDate(date).toLocaleDateString()}</Table.Cell>}
             <Table.Cell>{from}</Table.Cell>
             <Table.Cell>{target}</Table.Cell>
             <Table.Cell>{amount}</Table.Cell>
@@ -43,5 +43,12 @@ function TransactionsToList({transactions, showDate}) {
         </Table>
     )
 }
+
+function convertJSONDate(dateStr){
+    console.log(dateStr);
+    return new Date(dateStr);
+}
+
+
 
 export default TransactionList;

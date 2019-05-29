@@ -47,7 +47,7 @@ class Dashboard extends Component {
                         </Segment>
                         <Segment>
                             <Divider/>
-                            <TransactionList token={this.props.token} fromDate={''} toDate={''} count={3} skip={0}/>
+                            <TransactionList token={this.props.token} fromDate={''} toDate={''} count={3} skip={0} showDate={false}/>
                             <Button primary content={'All Transactions'}/>
                         </Segment>
                     </Segment.Group>
