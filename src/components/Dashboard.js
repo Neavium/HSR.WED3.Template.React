@@ -1,17 +1,13 @@
 //@flow
 import React, {Component} from "react";
-import {Button, Dimmer, Divider, Form, Grid, Header, Loader, Segment, Table} from 'semantic-ui-react'
+import {Button, Dimmer, Divider, Form, Grid, Header, Loader, Segment, Table} from 'semantic-ui-react';
 import {getTransactions} from "../api";
 
-class Dashboard extends Component{
-    render(){
-        return (<FillDashboard token={this.props.token}/>)
-    }
-}
 
-class FillDashboard extends Component {
+class Dashboard extends Component {
     state = {};
 
+    //Todo: Neue Transaktion Funktionalität implementieren
     handleChange = (e, {name, value}) => this.setState({[name]: value});
 
     handleSubmit = () => this.setState({from: '', to: '', amount: ''});

@@ -5,7 +5,6 @@ import {BrowserRouter as Router, Link, Redirect, Route, withRouter} from "react-
 
 import 'semantic-ui-css/semantic.min.css';
 
-import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import {Button, Menu} from "semantic-ui-react";
