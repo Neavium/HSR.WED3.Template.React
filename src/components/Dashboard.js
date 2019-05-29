@@ -1,10 +1,13 @@
 //@flow
 import React, {Component} from "react";
 import {Button, Dimmer, Divider, Form, Grid, Header, Loader, Segment, Table} from 'semantic-ui-react'
+import {getTransactions} from "../api";
 
-const Dashboard = () => (
-    <FillDashboard/>
-);
+class Dashboard extends Component{
+    render(){
+        return (<FillDashboard token={this.props.token}/>)
+    }
+}
 
 class FillDashboard extends Component {
     state = {};
@@ -47,7 +50,7 @@ class FillDashboard extends Component {
                         </Segment>
 
                         <Segment>
-                            <LatestTransactions/>
+                            <LatestTransactions token={this.props.token}/>
                             <Button primary content={'All Transactions'}/>
                         </Segment>
                     </Segment.Group>
@@ -58,53 +61,29 @@ class FillDashboard extends Component {
 }
 
 class LatestTransactions extends Component {
-    render() {
-        return (
-            <>
-                <Divider/>
-                <Table singleLine basic={'very'}>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>Source</Table.HeaderCell>
-                            <Table.HeaderCell>Target</Table.HeaderCell>
-                            <Table.HeaderCell>Amount [CHF]</Table.HeaderCell>
-                            <Table.HeaderCell>Balance [CHF]</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
 
-                    <Dimmer.Dimmable as={Table.Body}>
-                        <Table.Row>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                        </Table.Row>
-                        <Table.Row>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                            <Table.Cell> No Data </Table.Cell>
-                        </Table.Row>
-                        <Dimmer active={true}>
-                                <Loader content={'Loading Data...'}/>
-                        </Dimmer>
-                    </Dimmer.Dimmable>
-                </Table>
-            </>
-        )
+    state = {
+        transactions: []
+    };
+
+    componentDidMount() {
+        getTransactions(this.props.token)
+            .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
     }
+
+    render = () => <TransactionList transactions={this.state.transactions}/>
 }
+
+function TransactionList({transactions}) {
+    const renderTransaction = ({from, target, amount, total, date}) =>
+        <Table.Row>
+            <Table.Cell>{from}</Table.Cell>
+            <Table.Cell>{target}</Table.Cell>
+            <Table.Cell>{amount}</Table.Cell>
+            <Table.Cell>{total}</Table.Cell>
+        </Table.Row>;
+    return <Table singleLine basic={'very'}>{transactions.map(renderTransaction)} </Table>
+}
+
 
 export default Dashboard;
