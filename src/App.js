@@ -5,19 +5,16 @@ import {BrowserRouter as Router, Link, Redirect, Route, withRouter} from "react-
 
 import 'semantic-ui-css/semantic.min.css';
 
-import Home from "./components/Home";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import {Button, Menu} from "semantic-ui-react";
 
 import PrivateRoute from "./components/PrivateRoute";
 import Dashboard from "./components/Dashboard";
+import AllTransactions from "./components/AllTransactions";
 
 import type {User} from "./api";
 import * as api from "./api";
-
-// TODO: Move to own files
-const AllTransactions = () => <div/>;
 
 // The following are type definitions for Flow,
 // an optional type checker for JavaScript. You
@@ -89,7 +86,8 @@ class App extends React.Component<Props, State> {
         const MenuBar = withRouter(({history, location: {pathname}}) => {
             if (isAuthenticated && user) {
                 return (
-                    <Menu inverted style={{borderRadius:0}}>
+                    <Menu inverted stackable size={'massive'} style={{borderRadius:0}}>
+                        <Menu.Item header> WED3 Finances Incorporated</Menu.Item>
                         <Menu.Item
                             as={Link} to={"/"}
                             name='home'
