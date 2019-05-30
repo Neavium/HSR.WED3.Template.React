@@ -4,12 +4,39 @@ import {Table} from 'semantic-ui-react';
 import {getTransactions} from "../api";
 
 export class TransactionList extends Component {
+    i: Number;
 
-    state = {
-        transactions: []
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            transactions: []
+        };
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.toDate !== nextProps.toDate){
+            return true;
+        }
+        if(this.props.fromDate !== nextProps.fromDate){
+            return true;
+        }
+        if(this.state.transactions !== nextState.transactions){
+            return true;
+        }
+        return false;
+    }
 
     componentDidMount() {
+        console.log('getting transactions!');
+        getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
+            .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps === this.props){
+            return;
+        }
+        console.log('update of transactionList');
         getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
             .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
     }
@@ -45,7 +72,6 @@ function TransactionsToList({transactions, showDate}) {
 }
 
 function convertJSONDate(dateStr){
-    console.log(dateStr);
     return new Date(dateStr);
 }
 
