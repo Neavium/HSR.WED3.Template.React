@@ -106,13 +106,13 @@ class Login extends React.Component<Props, *> {
                                     />
                                 </Form>
                             </Grid.Column>
-
+                            <Divider horizontal>Oder</Divider>
                             <Grid.Column verticalAlign='middle'>
                                 <Button as={Link} to={'/signup'} content='Registrieren' icon='signup' size='big'/>
                             </Grid.Column>
                         </Grid>
 
-                        <Divider vertical>Oder</Divider>
+
                     </Segment>
                 </Segment.Group>
             </Container>

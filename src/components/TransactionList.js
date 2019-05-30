@@ -1,6 +1,6 @@
 //@flow
 import React, {Component} from "react";
-import {Table} from 'semantic-ui-react';
+import {Dimmer, Loader, Table} from 'semantic-ui-react';
 import {getTransactions} from "../api";
 
 export class TransactionList extends Component {
@@ -9,51 +9,58 @@ export class TransactionList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            transactions: []
+            transactions: [],
+            loading: true,
         };
-    }
-
-    shouldComponentUpdate(nextProps, nextState){
-        if(this.props.toDate !== nextProps.toDate){
-            return true;
-        }
-        if(this.props.fromDate !== nextProps.fromDate){
-            return true;
-        }
-        if(this.state.transactions !== nextState.transactions){
-            return true;
-        }
-        return false;
     }
 
     componentDidMount() {
         console.log('getting transactions!');
         getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
-            .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
+            .then(returnedTransactions => this.setState({transactions: returnedTransactions.result, loading: false}))
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevProps !== this.props){
-            getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
-                .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
+        if (this.state.loading) {
+            return;
         }
+        if (prevProps !== this.props) {
+            this.setState({loading: true});
+            getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
+                .then(returnedTransactions => this.setState({
+                    transactions: returnedTransactions.result,
+                    loading: false
+                }))
+        }
+
 
     }
 
-    render = () => <TransactionsToList transactions={this.state.transactions} showDate={this.props.showDate}/>
+    render() {
+        return (
+            <Table unstackable basic={'very'}>
+                <Dimmer inverted active={this.state.loading}><Loader/></Dimmer>
+                <TransactionsToList transactions={this.state.transactions} showDate={this.props.showDate}/>
+            </Table>
+        )
+    }
 }
 
 function TransactionsToList({transactions, showDate}) {
-    const renderTransaction = ({from, target, amount, total, date}) =>
-        <Table.Row>
-            {showDate && <Table.Cell>{convertJSONDate(date).toLocaleDateString()}</Table.Cell>}
-            <Table.Cell>{from}</Table.Cell>
-            <Table.Cell>{target}</Table.Cell>
-            <Table.Cell>{amount}</Table.Cell>
-            <Table.Cell>{total}</Table.Cell>
-        </Table.Row>;
+    const renderTransaction = ({from, target, amount, total, date}) => {
+        return (
+            <Table.Row>
+                {showDate && <Table.Cell>{convertJSONDate(date).toLocaleDateString()}</Table.Cell>}
+                <Table.Cell>{from}</Table.Cell>
+                <Table.Cell>{target}</Table.Cell>
+                <Table.Cell>{amount}</Table.Cell>
+                <Table.Cell>{total}</Table.Cell>
+            </Table.Row>
+        )
+    };
+
     return (
-        <Table singleLine basic={'very'}>
+        <>
             <Table.Header>
                 <Table.Row>
                     {showDate && <Table.HeaderCell>Date</Table.HeaderCell>}
@@ -63,17 +70,16 @@ function TransactionsToList({transactions, showDate}) {
                     <Table.HeaderCell>Balance [CHF]</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
-            <Table.Body>
+            < Table.Body>
                 {transactions.map(renderTransaction)}
             </Table.Body>
-        </Table>
+        </>
     )
 }
 
-function convertJSONDate(dateStr){
+function convertJSONDate(dateStr) {
     return new Date(dateStr);
 }
-
 
 
 export default TransactionList;
