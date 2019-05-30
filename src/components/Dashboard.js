@@ -16,6 +16,7 @@ class Dashboard extends Component {
             targetAccountName: '',
             amountError: false,
             targetAccountError: false,
+            showTransactionDone: false,
         };
     }
 
@@ -31,7 +32,10 @@ class Dashboard extends Component {
         this.setState({[name]: value});
     };
 
-    handleSubmit = () => transfer(this.state.targetAccount, this.state.amount, this.props.token);
+    handleSubmit = () => {
+        this.setState({showTransactionDone: true});
+        return transfer(this.state.targetAccount, this.state.amount, this.props.token);
+    };
 
     isValidTargetAccount = (account) => {
         if (account === '') {
@@ -46,8 +50,10 @@ class Dashboard extends Component {
             })
             .then(result => {
                 console.log(result);
-                this.setState({targetAccountName: result.owner.firstname + ' ' + result.owner.lastname
-                , targetAccountError: false});
+                this.setState({
+                    targetAccountName: result.owner.firstname + ' ' + result.owner.lastname
+                    , targetAccountError: false
+                });
             });
     };
 
@@ -79,43 +85,58 @@ class Dashboard extends Component {
                                 New Payment
                             </Header>
                         </Segment>
-                        <Segment>
-                            <Form onSubmit={this.handleSubmit}>
-                                <Form.Input disabled
-                                            label='From:'
-                                            name='from'
-                                            value={this.props.user.accountNr + ' [' + this.state.balance + ' CHF]'}
-                                            onChange={this.handleChange}>
-                                </Form.Input>
-                                <Form.Input label='To:'
-                                            placeholder='Target Account Number'
-                                            name='targetAccount'
-                                            value={transactionTo}
-                                            onChange={this.handleChange}
-                                >
-                                </Form.Input>
-                                {!this.state.targetAccount && <p>Please specify the target account number.</p>}
-                                {this.state.targetAccountError && this.state.targetAccount ? <p>Unkown account number specified.</p> :
-                                    <p>{this.state.targetAccountName}</p>}
-                                <Form.Input label='Amount [CHF]:'
-                                            placeholder='Amount in CHF'
-                                            name='amount'
-                                            value={transactionAmount}
-                                            onChange={this.handleChange}
-                                />
-                                {!this.state.amount && <p>Please specify the amount.</p>}
-                                {this.state.amountError && <p>Please input a valid amount.</p>}
-                                <Form.Button
-                                    content='Pay'
-                                    as={Button}
-                                    primary
-                                    disabled={!this.state.targetAccount
-                                    || !this.state.amount
-                                    || this.state.targetAccountError
-                                    || this.state.amountError}
-                                />
-                            </Form>
-                        </Segment>
+                        {
+                            this.state.showTransactionDone
+                                ?
+                                <Segment textAlign={'center'}>
+                                    <p>Transaction to {this.state.targetAccount} succeeded!</p>
+                                    <p>New balance {this.state.balance} CHF</p>
+                                    <Button
+                                        primary
+                                        content={'Start Over'}
+                                        onClick={() => this.setState({showTransactionDone: false})}
+                                    />
+                                </Segment>
+                                :
+                                <Segment>
+                                    <Form onSubmit={this.handleSubmit}>
+                                        <Form.Input disabled
+                                                    label='From:'
+                                                    name='from'
+                                                    value={this.props.user.accountNr + ' [' + this.state.balance + ' CHF]'}
+                                                    onChange={this.handleChange}>
+                                        </Form.Input>
+                                        <Form.Input label='To:'
+                                                    placeholder='Target Account Number'
+                                                    name='targetAccount'
+                                                    value={transactionTo}
+                                                    onChange={this.handleChange}
+                                        >
+                                        </Form.Input>
+                                        {!this.state.targetAccount && <p>Please specify the target account number.</p>}
+                                        {this.state.targetAccountError && this.state.targetAccount ?
+                                            <p>Unkown account number specified.</p> :
+                                            <p>{this.state.targetAccountName}</p>}
+                                        <Form.Input label='Amount [CHF]:'
+                                                    placeholder='Amount in CHF'
+                                                    name='amount'
+                                                    value={transactionAmount}
+                                                    onChange={this.handleChange}
+                                        />
+                                        {!this.state.amount && <p>Please specify the amount.</p>}
+                                        {this.state.amountError && <p>Please input a valid amount.</p>}
+                                        <Form.Button
+                                            content='Pay'
+                                            as={Button}
+                                            primary
+                                            disabled={!this.state.targetAccount
+                                            || !this.state.amount
+                                            || this.state.targetAccountError
+                                            || this.state.amountError}
+                                        />
+                                    </Form>
+                                </Segment>
+                        }
                     </Segment.Group>
                 </Grid.Column>
                 <Grid.Column>
