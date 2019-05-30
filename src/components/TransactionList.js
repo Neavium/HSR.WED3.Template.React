@@ -1,15 +1,41 @@
 //@flow
 import React, {Component} from "react";
-import {Button, Dimmer, Divider, Form, Grid, Header, Loader, Segment, Table} from 'semantic-ui-react';
+import {Table} from 'semantic-ui-react';
 import {getTransactions} from "../api";
 
 export class TransactionList extends Component {
+    i: Number;
 
-    state = {
-        transactions: []
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            transactions: []
+        };
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.toDate !== nextProps.toDate){
+            return true;
+        }
+        if(this.props.fromDate !== nextProps.fromDate){
+            return true;
+        }
+        if(this.state.transactions !== nextState.transactions){
+            return true;
+        }
+        return false;
+    }
 
     componentDidMount() {
+        console.log('getting transactions!');
+        getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
+            .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps === this.props && prevState === this.state){
+            return;
+        }
         getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
             .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
     }
@@ -20,7 +46,7 @@ export class TransactionList extends Component {
 function TransactionsToList({transactions, showDate}) {
     const renderTransaction = ({from, target, amount, total, date}) =>
         <Table.Row>
-            {showDate && <Table.Cell>{date}</Table.Cell>}
+            {showDate && <Table.Cell>{convertJSONDate(date).toLocaleDateString()}</Table.Cell>}
             <Table.Cell>{from}</Table.Cell>
             <Table.Cell>{target}</Table.Cell>
             <Table.Cell>{amount}</Table.Cell>
@@ -43,5 +69,11 @@ function TransactionsToList({transactions, showDate}) {
         </Table>
     )
 }
+
+function convertJSONDate(dateStr){
+    return new Date(dateStr);
+}
+
+
 
 export default TransactionList;

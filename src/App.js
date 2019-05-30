@@ -79,14 +79,13 @@ class App extends React.Component<Props, State> {
     };
 
 
-
     render() {
         const {isAuthenticated, user, token} = this.state;
 
         const MenuBar = withRouter(({history, location: {pathname}}) => {
             if (isAuthenticated && user) {
                 return (
-                    <Menu inverted stackable size={'massive'} style={{borderRadius:0}}>
+                    <Menu inverted stackable size={'massive'} style={{borderRadius: 0}}>
                         <Menu.Item header> WED3 Finances Incorporated</Menu.Item>
                         <Menu.Item
                             as={Link} to={"/"}
@@ -98,14 +97,14 @@ class App extends React.Component<Props, State> {
 
                         <Menu.Item
                             as={Link} to={"/transactions"}
-                            name='upcomingEvents'
+                            name='transactions'
                             active={pathname === '/transactions'}
                         >
                             Zahlungen
                         </Menu.Item>
                         <Menu.Menu position='right'>
-                            <Menu.Item name ="logout">
-                                <Button onClick={event =>{
+                            <Menu.Item name="logout">
+                                <Button onClick={event => {
                                     event.preventDefault();
                                     this.signout(() => history.push("/"));
                                 }}> Logout {user.firstname} {user.lastname}
@@ -126,11 +125,11 @@ class App extends React.Component<Props, State> {
                         exact
                         path="/"
                         render={() => {
-                            if (!isAuthenticated){
+                            if (!isAuthenticated) {
                                 return (<Redirect
                                     to={{pathname: "/login"}}
                                 />);
-                            }else{
+                            } else {
                                 return (
                                     React.createElement(Dashboard, {user, token})
                                 );
@@ -143,7 +142,12 @@ class App extends React.Component<Props, State> {
                             <Login {...props} authenticate={this.authenticate}/>
                         )}
                     />
-                    <Route path="/signup" component={Signup}/>
+                    <Route
+                        path="/signup"
+                        render={props => (
+                            <Signup {...props} authenticate={this.authenticate}/>
+                        )}
+                    />
                     {/*
             This is a comment inside JSX! It's a bit ugly, but works fine.
 

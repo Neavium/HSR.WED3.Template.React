@@ -13,7 +13,6 @@ import {
     Container,
     Dropdown,
 } from 'semantic-ui-react';
-import {getTransactions} from "../api";
 import TransactionList from "./TransactionList";
 
 const yearOptions = [
@@ -23,21 +22,49 @@ const yearOptions = [
 ];
 
 const monthOptions = [
-    {key: '1', value: 'January', text: 'January'},
-    {key: '2', value: 'February', text: 'February'},
-    {key: '3', value: 'March', text: 'March'},
-    {key: '4', value: 'April', text: 'April'},
-    {key: '5', value: 'May', text: 'May'},
-    {key: '6', value: 'June', text: 'June'},
-    {key: '7', value: 'Juli', text: 'Juli'},
-    {key: '8', value: 'August', text: 'August'},
-    {key: '9', value: 'September', text: 'September'},
-    {key: '10', value: 'October', text: 'October'},
-    {key: '11', value: 'November', text: 'November'},
-    {key: '12', value: 'December', text: 'December'},
+    {key: '1', value: '0', text: 'January'},
+    {key: '2', value: '1', text: 'February'},
+    {key: '3', value: '2', text: 'March'},
+    {key: '4', value: '3', text: 'April'},
+    {key: '5', value: '4', text: 'May'},
+    {key: '6', value: '5', text: 'June'},
+    {key: '7', value: '6', text: 'Juli'},
+    {key: '8', value: '7', text: 'August'},
+    {key: '9', value: '8', text: 'September'},
+    {key: '10', value: '9', text: 'October'},
+    {key: '11', value: '10', text: 'November'},
+    {key: '12', value: '11', text: 'December'},
 ]
 
 class AllTransactions extends Component {
+
+    state = {
+        fromDate: new Date('1900-01-01').toJSON(),
+        toDate: new Date('2100-12-31').toJSON()
+    };
+
+    handleChange = (e, {name, value}) => {
+        let from = new Date(this.state.fromDate);
+        let to = new Date(this.state.toDate);
+
+        if (name === 'year') {
+            from.setFullYear(value);
+            to.setFullYear(value);
+
+        } else if (name === 'month') {
+            let endMonth: number = value;
+            from.setMonth(value);
+            to.setMonth( ++endMonth);
+            to.setDate(1);
+            to.setDate(to.getDate() - 1);
+        }
+
+        this.setState({
+            fromDate: from.toJSON(),
+            toDate: to.toJSON()
+        });
+    };
+
     render() {
         return (
             <Container>
@@ -51,10 +78,26 @@ class AllTransactions extends Component {
                         <Header>
                             Filter
                         </Header>
-                        <Dropdown placeholder={'Select Year'} search selection options={yearOptions}/>
-                        <Dropdown placeholder={'Select Month'} search selection options={monthOptions}/>
+                        <Dropdown
+                            name={'year'}
+                            placeholder={'Select Year'}
+                            search
+                            selection
+                            options={yearOptions}
+                            onChange={this.handleChange}
+                        />
+                        <Dropdown
+                            name={'month'}
+                            placeholder={'Select Month'}
+                            search
+                            selection
+                            options={monthOptions}
+                            onChange={this.handleChange}
+                        />
                         <Divider/>
-                        <TransactionList token={this.props.token} fromDate={''} toDate={''} count={-1} skip={0} showDate={true}/>
+                        <TransactionList token={this.props.token} fromDate={this.state.fromDate}
+                                         toDate={this.state.toDate} count={-1} skip={0}
+                                         showDate={true}/>
                     </Segment>
                 </Segment.Group>
             </Container>
