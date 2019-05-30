@@ -33,10 +33,9 @@ export class TransactionList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevProps === this.props){
+        if(prevProps === this.props && prevState === this.state){
             return;
         }
-        console.log('update of transactionList');
         getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
             .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
     }
