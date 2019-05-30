@@ -98,7 +98,7 @@ class App extends React.Component<Props, State> {
 
                         <Menu.Item
                             as={Link} to={"/transactions"}
-                            name='upcomingEvents'
+                            name='transactions'
                             active={pathname === '/transactions'}
                         >
                             Zahlungen

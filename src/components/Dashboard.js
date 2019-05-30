@@ -1,8 +1,8 @@
 //@flow
 import React, {Component} from "react";
-import {Button, Dimmer, Divider, Form, Grid, Header, Loader, Segment, Table} from 'semantic-ui-react';
-import {getTransactions} from "../api";
+import {Button, Divider, Form, Grid, Header, Menu, Segment} from 'semantic-ui-react';
 import {TransactionList} from "./TransactionList";
+import {Link} from "react-router-dom";
 
 
 class Dashboard extends Component {
@@ -33,7 +33,7 @@ class Dashboard extends Component {
                                             value={transactionTo} onChange={this.handleChange}/>
                                 <Form.Input label='Amount [CHF]:' placeholder='Amount in CHF' name='amount'
                                             value={transactionAmount} onChange={this.handleChange}/>
-                                <Form.Button content='Pay' as={Button} primary/>
+                                <Form.Button content='Pay' as={Button} primary />
                             </Form>
                         </Segment>
                     </Segment.Group>
@@ -48,7 +48,12 @@ class Dashboard extends Component {
                         <Segment>
                             <Divider/>
                             <TransactionList token={this.props.token} fromDate={''} toDate={''} count={3} skip={0} showDate={false}/>
-                            <Button primary content={'All Transactions'}/>
+                            <Button
+                                primary content={'All Transactions'}
+                                as={Link}
+                                to={"/transactions"}
+                                name='transactions'
+                            />
                         </Segment>
                     </Segment.Group>
                 </Grid.Column>
