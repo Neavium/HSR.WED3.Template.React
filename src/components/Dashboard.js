@@ -19,7 +19,6 @@ class Dashboard extends Component {
         };
     }
 
-    //Todo: Neue Transaktion Funktionalität implementieren
     handleChange = (e, {name, value}) => {
         switch (name) {
             case('amount'):
@@ -72,7 +71,7 @@ class Dashboard extends Component {
         const {transactionFrom, transactionTo, transactionAmount} = this.state;
 
         return (
-            <Grid streched columns='equal' container stackable>
+            <Grid stretched columns='equal' container stackable>
                 <Grid.Column width={5}>
                     <Segment.Group>
                         <Segment secondary size={'massive'}>

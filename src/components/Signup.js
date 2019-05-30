@@ -1,11 +1,11 @@
 // @flow
 
 import React from "react";
-import {Redirect} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 
 import {signup} from "../api";
 
-import {Form, Message} from "semantic-ui-react";
+import {Container, Divider, Form, Grid, Header, Message, Segment} from "semantic-ui-react";
 import {Button} from "semantic-ui-react";
 
 type Props = {};
@@ -25,95 +25,151 @@ class Signup extends React.Component<Props, State> {
         firstname: "",
         lastname: "",
         password: "",
+        confirmPassword: "",
         error: null,
+        confirmPasswordError: true,
         redirectToReferrer: false
     };
 
-    handleLoginChanged = (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            this.setState({login: event.target.value});
-        }
-    };
+    handleChange = (e, {name, value}) => {
+        switch (name) {
+            case('login'):
+                break;
+            case ('firstname'):
+                break;
+            case ('lastname'):
+                break;
+            case ('password'):
+                break;
+            case ('confirmPassword'):
+                this.state.confirmPasswordError = this.state.password !== value;
+                break;
 
-    handleFirstNameChanged = (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            this.setState({firstname: event.target.value});
         }
-    };
-
-    handleLastNameChanged = (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            this.setState({lastname: event.target.value});
-        }
-    };
-
-    handlePasswordChanged = (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            this.setState({password: event.target.value});
-        }
+        this.setState({[name]: value});
     };
 
     handleSubmit = (event: Event) => {
+        console.log('submitting...');
         event.preventDefault();
         const {login, firstname, lastname, password} = this.state;
         signup(login, firstname, lastname, password)
+            .catch(error => this.setState({error}))
             .then(result => {
-                console.log("Signup result ", result);
-                this.setState({redirectToReferrer: true, error: null});
-            })
-            .catch(error => this.setState({error}));
+                console.log("login in...");
+                this.props.authenticate(login, password, error => {
+                    if (error) {
+                        this.setState({error});
+                    } else {
+                        this.setState({redirectToReferrer: true, error: null});
+                    }
+                });
+            });
     };
 
     render() {
         const {redirectToReferrer, error} = this.state;
 
         if (redirectToReferrer) {
-            return <Redirect to="/login"/>;
+            return <Redirect to="/"/>;
         }
 
         return (
-            <div>
-                <h1>Bank of Rapperswil</h1>
-                <form>
-                    <h2>Registrieren</h2>
-                    <input
-                        onChange={this.handleLoginChanged}
-                        placeholder="Login"
-                        value={this.state.login}
-                    />
-                    <input
-                        onChange={this.handleFirstNameChanged}
-                        placeholder="Vorname"
-                        value={this.state.firstname}
-                    />
-                    <input
-                        onChange={this.handleLastNameChanged}
-                        placeholder="Nachname"
-                        value={this.state.lastname}
-                    />
-                    <input
-                        onChange={this.handlePasswordChanged}
-                        placeholder="Passwort"
-                        type="password"
-                        value={this.state.password}
-                    />
-                    <button onClick={this.handleSubmit}>Account eröffnen</button>
-                </form>
-                <Form style={{maxWidth: '50%'}} error={error}>
-                    <Form.Input fluid label='Username' placeholder='Username'
-                                required onChange={this.handleLoginChanged}/>
-                    <Form.Input fluid label='Vorname' placeholder='Vorname'
-                                required onChange={this.handleFirstNameChanged}/>
-                    <Form.Input fluid label='Nachname' placeholder='Nachname' />
-                    <Form.Input type='password' fluid label='Password' placeholder='Password' required/>
-                    <Button onClick={this.handleSubmit} content='Account eröffnen'/>
-                    <Message
-                        error
-                        header='Action Forbidden'
-                        content='You can only sign up for an account once with a given e-mail address.'
-                    />
-                </Form>
-            </div>
+            <Container>
+                <Segment.Group>
+                    <Segment textAlign={'center'} inverted size={'massive'}>
+                        <header>
+                            Welcome to WED3 Finances Inc.
+                        </header>
+                    </Segment>
+                    <Segment placeholder>
+                        <Form onSubmit={this.handleSubmit}>
+                            <Grid columns={3} centered>
+                                <Grid.Row>
+                                    <Grid.Column>
+                                        <Form.Input label='First name' placeholder='First name'
+                                                    name={'firstname'}
+                                                    value={this.state.firstname}
+                                                    onChange={this.handleChange}
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column textAlign={'left'} verticalAlign={'bottom'}>
+                                        {!this.state.firstname && <p>Please specify your first name.</p>}
+                                    </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row>
+                                    <Grid.Column>
+                                        <Form.Input label='Last name' placeholder='Last name'
+                                                    name={'lastname'}
+                                                    value={this.state.lastname}
+                                                    onChange={this.handleChange}
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column textAlign={'left'} verticalAlign={'bottom'}>
+                                        {!this.state.lastname && <p>Please specify your last name.</p>}
+                                    </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row>
+                                    <Grid.Column>
+                                        <Form.Input label='User name' placeholder='User'
+                                                    name={'login'}
+                                                    value={this.state.login}
+                                                    onChange={this.handleChange}
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column textAlign={'left'} verticalAlign={'bottom'}>
+                                        {this.state.login.length < 3 &&
+                                        <p>Please specify your login, at least three characters.</p>}
+                                    </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row>
+                                    <Grid.Column>
+                                        <Form.Input label='Password' type='Password'
+                                                    placeholder='Password'
+                                                    name={'password'}
+                                                    value={this.state.password}
+                                                    onChange={this.handleChange}
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column textAlign={'left'} verticalAlign={'bottom'}>
+                                        {this.state.password.length < 3 &&
+                                        <p>Please specify your password, at least three characters.</p>}
+                                    </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row>
+                                    <Grid.Column>
+                                        <Form.Input label='Confirm Password' type='Password'
+                                                    placeholder='Password'
+                                                    name={'confirmPassword'}
+                                                    value={this.state.confirmPassword}
+                                                    onChange={this.handleChange}
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column textAlign={'left'} verticalAlign={'bottom'}>
+                                        {this.state.confirmPasswordError && <p>Please confirm your password.</p>}
+                                    </Grid.Column>
+                                </Grid.Row>
+                                <Grid.Row>
+                                    <Grid.Column>
+                                        <Button
+                                            onClick={this.handleSubmit}
+                                            content='Einloggen'
+                                            primary
+                                            disabled={
+                                                !this.state.firstname
+                                                || !this.state.lastname
+                                                || this.state.login.length < 3
+                                                || this.state.password.length < 3
+                                                || this.state.confirmPasswordError
+                                            }
+                                        />
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
+                        </Form>
+                    </Segment>
+                </Segment.Group>
+            </Container>
         );
     }
 }
