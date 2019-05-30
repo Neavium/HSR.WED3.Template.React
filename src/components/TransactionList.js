@@ -33,11 +33,11 @@ export class TransactionList extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevProps === this.props && prevState === this.state){
-            return;
+        if(prevProps !== this.props){
+            getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
+                .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
         }
-        getTransactions(this.props.token, this.props.fromDate, this.props.toDate, this.props.count, this.props.skip)
-            .then(returnedTransactions => this.setState({transactions: returnedTransactions.result}))
+
     }
 
     render = () => <TransactionsToList transactions={this.state.transactions} showDate={this.props.showDate}/>
