@@ -40,9 +40,10 @@ class Signup extends React.Component<Props, State> {
             case ('lastname'):
                 break;
             case ('password'):
+                this.setState({confirmPasswordError: this.state.confirmPassword !== value});
                 break;
             case ('confirmPassword'):
-                this.state.confirmPasswordError = this.state.password !== value;
+                this.setState({confirmPasswordError: this.state.password !== value});
                 break;
 
         }
@@ -56,6 +57,9 @@ class Signup extends React.Component<Props, State> {
         signup(login, firstname, lastname, password)
             .catch(error => this.setState({error}))
             .then(result => {
+                if(this.state.error){
+                    return;
+                }
                 console.log("login in...");
                 this.props.authenticate(login, password, error => {
                     if (error) {
@@ -83,7 +87,7 @@ class Signup extends React.Component<Props, State> {
                         </header>
                     </Segment>
                     <Segment placeholder>
-                        <Form onSubmit={this.handleSubmit}>
+                        <Form onSubmit={this.handleSubmit} error={this.state.error}>
                             <Grid columns={3} centered>
                                 <Grid.Row>
                                     <Grid.Column>
@@ -149,6 +153,11 @@ class Signup extends React.Component<Props, State> {
                                         {this.state.confirmPasswordError && <p>Please confirm your password.</p>}
                                     </Grid.Column>
                                 </Grid.Row>
+                                <Message
+                                    error
+                                    header={'Registration Failed!'}
+                                    content={'This username is already taken, Sorry.'}
+                                />
                                 <Grid.Row>
                                     <Grid.Column>
                                         <Button
@@ -166,6 +175,7 @@ class Signup extends React.Component<Props, State> {
                                     </Grid.Column>
                                 </Grid.Row>
                             </Grid>
+
                         </Form>
                     </Segment>
                 </Segment.Group>

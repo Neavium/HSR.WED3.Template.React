@@ -39,7 +39,7 @@ export class TransactionList extends Component {
     render() {
         return (
             <Table unstackable basic={'very'}>
-                <Dimmer inverted active={this.state.loading}><Loader/></Dimmer>
+                <Dimmer inverted active={false}><Loader/></Dimmer>
                 <TransactionsToList transactions={this.state.transactions} showDate={this.props.showDate}/>
             </Table>
         )
